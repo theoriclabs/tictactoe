@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        # Ubuntu 22.04, not latest: leancrypto links the system's static libcrypto, and one built
+        # for glibc 2.38 or later calls `__isoc23_*` functions that Lean's bundled glibc lacks.
+        os: [ubuntu-22.04, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install OpenSSL and the sqlite3 shell (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libssl-dev sqlite3
+      - name: Install OpenSSL (macOS)
+        if: runner.os == 'macOS'
+        run: brew install openssl@3 || true
+      - name: Install elan
+        run: |
+          curl -sSfL https://elan.lean-lang.org/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/cache@v4
+        with:
+          path: .lake
+          key: lake-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.lean') }}
+      - name: Build
+        run: lake build
+      - name: The operations, run in memory
+        run: lake env lean --run TicTacToe/Run.lean
+      - name: Exactly the three examples the post shows fail to compile
+        run: |
+          out=$(lake env lean TicTacToe/Examples.lean 2>&1 || true)
+          echo "$out"
+          test "$(echo "$out" | grep -c ': error')" -eq 3
+      - name: Every answer the post shows, over HTTP and SQLite
+        run: scripts/run-check.sh
