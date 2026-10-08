@@ -9,7 +9,7 @@ package tictactoe
 require leanapi from git "https://github.com/theoriclabs/leanapi" @ "b66c2991fae8fbe55b5c77d14b0216016855c6c0"
 
 lean_lib TicTacToe where
-  roots := #[`TicTacToe.Rules, `TicTacToe.Server]
+  roots := #[`TicTacToe.Rules, `TicTacToe.Theorems, `TicTacToe.Server]
 
 @[default_target]
 lean_exe tictactoe where

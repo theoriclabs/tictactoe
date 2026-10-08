@@ -10,6 +10,7 @@ read back from the database is replayed through the same rules.
 | File | What it is |
 | --- | --- |
 | `TicTacToe/Rules.lean` | The game: vocabulary and rules. Plain Lean, no imports. |
+| `TicTacToe/Theorems.lean` | What the rules guarantee for every game, replayed ones included: no square marked twice, at most nine moves, X and O alternating with X first, no move once the game is over, and a winner who really has a line. |
 | `TicTacToe/Server.lean` | Storage and endpoints. It imports `LeanDb.Model` and `LeanApi.Core`. |
 | `Main.lean` | `app% server where api := api`, the HTTP server. It imports `LeanApi.Native`. |
 | `TicTacToe/Examples.lean` | Compile-time examples. Three of them fail to compile on purpose. |
