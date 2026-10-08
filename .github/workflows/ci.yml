@@ -32,6 +32,8 @@ jobs:
           key: lake-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.lean') }}
       - name: Build
         run: lake build
+      - name: The rules' theorems
+        run: lake build TicTacToe.Theorems
       - name: The operations, run in memory
         run: lake env lean --run TicTacToe/Run.lean
       - name: Exactly the three examples the post shows fail to compile
