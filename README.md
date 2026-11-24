@@ -18,6 +18,8 @@ read back from the database is replayed through the same rules.
 
 ## Running it
 
+Version 0.1.0 uses Lean 4.36.0 and LeanAPI 0.6.0.
+
 Install [elan](https://github.com/leanprover/elan) and OpenSSL 3 (`brew install openssl@3` on
 macOS, `apt install libssl-dev` on Debian or Ubuntu). Lake fetches LeanAPI, LeanDB and their
 dependencies at the revisions pinned in `lake-manifest.json`. SQLite is bundled.
